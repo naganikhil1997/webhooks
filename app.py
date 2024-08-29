@@ -1,16 +1,18 @@
-from flask import Flask, request, make_response, jsonify
+from flask import Flask, request, make_response
 import requests
 import json
 from dotenv import load_dotenv
 import os
 
+# Load environment variables from .env file
 load_dotenv()
 
 app = Flask(__name__)
 
-VERIFY_TOKEN = os.getenv('VERIFY_TOKEN', '')
-PAGE_ID = os.getenv('PAGE_ID', '')
-PAGE_ACCESS_TOKEN = os.getenv('PAGE_ACCESS_TOKEN', '')
+# Load configuration from environment variables
+VERIFY_TOKEN = os.getenv('VERIFY_TOKEN', 'hello_1234567')
+PAGE_ID = os.getenv('PAGE_ID', 'your_predefined_page_id')
+PAGE_ACCESS_TOKEN = os.getenv('PAGE_ACCESS_TOKEN', 'your_predefined_page_access_token')
 
 @app.route('/webhook/messaging-webhook', methods=['GET', 'POST'])
 def messaging_webhook():
@@ -65,21 +67,5 @@ def send_customer_a_message(page_id, response, page_token, psid):
         print(f"Request Error: {e}")
         return {}
 
-@app.route('/update-tokens', methods=['POST'])
-def update_tokens():
-    data = request.get_json()
-    global VERIFY_TOKEN, PAGE_ID, PAGE_ACCESS_TOKEN
-    
-    verify_token = data.get('VERIFY_TOKEN')
-    page_id = data.get('PAGE_ID')
-    page_access_token = data.get('PAGE_ACCESS_TOKEN')
-    
-    if verify_token and page_id and page_access_token:
-        VERIFY_TOKEN = verify_token
-        PAGE_ID = page_id
-        PAGE_ACCESS_TOKEN = page_access_token
-        return make_response('Tokens updated successfully', 200)
-    return make_response('Bad Request', 400)
-
 if __name__ == '__main__':
-     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
+    app.run(debug=True)
