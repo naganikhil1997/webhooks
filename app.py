@@ -68,4 +68,4 @@ def send_customer_a_message(page_id, response, page_token, psid):
         return {}
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
